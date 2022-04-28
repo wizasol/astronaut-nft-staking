@@ -25,7 +25,7 @@ For the first time use, the Smart Contract Owner should `initialize` the Smart C
 Recall `initialize` function for update the Threshold values after change the constants properly
 - `initProject` 
 
-Maintain the Reward token($TOKEN) vault's balance
+Maintain the Reward token($COSMIC) vault's balance
 - `REWARD_TOKEN_MINT` is the reward token mint (for test).
 - `rewardVault` is the reward token account for owner. The owner should have the token's `Mint Authority` or should `Fund` regularly.
 
@@ -59,8 +59,8 @@ Stake Shred Collection NFTs with NFT `mint address` and a boolean parameter weat
 Unstake their staked NFTs with `mint address` and get rewards. ( Calculate generated reward by this NFT too )
 - `withdrawNft`
 
-Claim reward to receive generated $TOKEN from their staking.
+Claim reward to receive generated $COSMIC from their staking.
 - `claimReward`
 
-Claim reward to receive generated $TOKEN from their staking for all NFTs.
+Claim reward to receive generated $COSMIC from their staking for all NFTs.
 - `claimRewardAll`
