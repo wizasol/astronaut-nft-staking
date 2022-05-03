@@ -10,16 +10,19 @@ import {
     sendAndConfirmTransaction
 } from '@solana/web3.js';
 import { Token, TOKEN_PROGRAM_ID, AccountLayout, MintLayout, ASSOCIATED_TOKEN_PROGRAM_ID } from "@solana/spl-token";
+import { Metadata } from "@metaplex-foundation/mpl-token-metadata";
 
 import fs from 'fs';
 import { GlobalPool, UserPool } from './types';
 
-const USER_POOL_SIZE = 2464;     // 8 + 41056
+const USER_POOL_SIZE = 3664;
 const GLOBAL_AUTHORITY_SEED = "global-authority";
 
 const ADMIN_PUBKEY = new PublicKey("Fs8R7R6dP3B7mAJ6QmWZbomBRuTbiJyiR4QYjoxhLdPu");
 const REWARD_TOKEN_MINT = new PublicKey("8EoML7gaBJsgJtepm25wq3GuUCqLYHBoqd3HP1JxtyBx");
-const PROGRAM_ID = "F7cBo37zfFK5kLbTZxfejozgSiTb6J3EfgNWiu9HRPzD";
+const PROGRAM_ID = "51dLXLR41vAQV5gQBExTNdDL5CadqcTh2HFvjnHoNHUz";
+
+export const METAPLEX = new web3.PublicKey('metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s');
 
 anchor.setProvider(anchor.Provider.local(web3.clusterApiUrl("devnet")));
 const solConnection = anchor.getProvider().connection;
@@ -49,35 +52,35 @@ const main = async () => {
     console.log('RewardVault: ', rewardVault.toBase58());
     console.log(await solConnection.getTokenAccountBalance(rewardVault));
 
-    // await initProject();
+    await initProject();
 
     const globalPool: GlobalPool = await getGlobalState();
-    console.log("globalPool =", globalPool.totalAmount.toNumber());
+    // console.log("globalPool =", globalPool.totalAmount.toNumber());
 
     // await initUserPool(payer.publicKey);
 
-    // await stakeNft(payer.publicKey, new PublicKey('D79yrn3PaNqjdJgV8HrVeBR35EuK2LTFS637psei5fW1'), new anchor.BN(10));
+    // await stakeNft(payer.publicKey, new PublicKey('FLuGogNV1UPns65SCz8ZLBnPx1P9EtcjVphvbyg2t6ix'), 15, "Doctor", 1);
     // await stakeNft(payer.publicKey, new PublicKey('FvVKssmkvAxTh1P9WLtoiCQExss4rpmt3ddqiap4eK3r'), false);
-    // await withdrawNft(payer.publicKey, new PublicKey('D79yrn3PaNqjdJgV8HrVeBR35EuK2LTFS637psei5fW1'));
+    await withdrawNft(payer.publicKey, new PublicKey('FLuGogNV1UPns65SCz8ZLBnPx1P9EtcjVphvbyg2t6ix'));
     // await withdrawNft(payer.publicKey, new PublicKey('LzRJvRA9zWcFDk8KwMPkVeZ3zbm6mw4sEdNmkChh9Sn'));
     // await claimReward(payer.publicKey);
 
-    const userPool: UserPool = await getUserPoolState(payer.publicKey);
-    console.log({
-        // ...userPool,
-        owner: userPool.owner.toBase58(),
-        stakedMints: userPool.items.slice(0, userPool.itemCount.toNumber()).map((info) => {
-            return {
-                // ...info,
-                mint: info.nftAddr.toBase58(),
-                stakedTime: info.stakeTime.toNumber(),
-                rank: info.rank.toNumber(),
-            }
-        }),
-        stakedCount: userPool.itemCount.toNumber(),
-        pendingReward: userPool.pendingReward.toNumber(),
-        lastRewardTime: (new Date(1000 * userPool.rewardTime.toNumber())).toLocaleString(),
-    });
+    // const userPool: UserPool = await getUserPoolState(payer.publicKey);
+    // console.log({
+    //     // ...userPool,
+    //     owner: userPool.owner.toBase58(),
+    //     stakedMints: userPool.items.slice(0, userPool.itemCount.toNumber()).map((info) => {
+    //         return {
+    //             // ...info,
+    //             mint: info.nftAddr.toBase58(),
+    //             stakedTime: info.stakeTime.toNumber(),
+    //             rank: info.rank.toNumber(),
+    //         }
+    //     }),
+    //     stakedCount: userPool.itemCount.toNumber(),
+    //     pendingReward: userPool.pendingReward.toNumber(),
+    //     lastRewardTime: (new Date(1000 * userPool.rewardTime.toNumber())).toLocaleString(),
+    // });
 };
 
 export const initProject = async (
@@ -209,9 +212,15 @@ export const stakeNft = async (
     if (poolAccount === null || poolAccount.data === null) {
         await initUserPool(userAddress);
     }
+    const metadata = await getMetadata(mint);
+    console.log("Metadata=", metadata.toBase58());
+
 
     const tx = await program.rpc.stakeNftToFixed(
-        bump, lock_period, role, model, {
+        bump,
+        new anchor.BN(lock_period),
+        role,
+        new anchor.BN(model), {
         accounts: {
             owner: userAddress,
             userFixedPool: userPoolKey,
@@ -219,7 +228,9 @@ export const stakeNft = async (
             userTokenAccount,
             destNftTokenAccount: destinationAccounts[0],
             nftMint: mint,
+            mintMetadata: metadata,
             tokenProgram: TOKEN_PROGRAM_ID,
+            tokenMetadataProgram: METAPLEX,
         },
         instructions: [
             ...instructions,
@@ -482,5 +493,11 @@ export const createAssociatedTokenAccountInstruction = (
         data: Buffer.from([]),
     });
 }
+/** Get metaplex mint metadata account address */
+export const getMetadata = async (mint: PublicKey): Promise<PublicKey> => {
+    return (
+        await PublicKey.findProgramAddress([Buffer.from('metadata'), METAPLEX.toBuffer(), mint.toBuffer()], METAPLEX)
+    )[0];
+};
 
 main();

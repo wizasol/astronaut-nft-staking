@@ -1,8 +1,9 @@
 {
     "scripts": {
-        "ts-node": "export ANCHOR_WALLET=/home/fury/.config/solana/id.json && ts-node ./cli/script.ts"
+        "ts-node": "export ANCHOR_WALLET=/home/ubuntu/fury/deploy-keypair.json && ts-node ./cli/script.ts"
     },
     "dependencies": {
+        "@metaplex-foundation/mpl-token-metadata": "^2.1.1",
         "@project-serum/anchor": "^0.20.1",
         "@solana/spl-token": "^0.1.8",
         "@types/chai": "^4.3.0",

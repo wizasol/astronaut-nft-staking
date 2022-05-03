@@ -3,6 +3,7 @@ use anchor_spl::{
     associated_token::AssociatedToken,
     token::{self, Token, TokenAccount, Transfer},
 };
+use metaplex_token_metadata::state::Metadata;
 
 pub mod account;
 pub mod constants;
@@ -12,7 +13,7 @@ use account::*;
 use constants::*;
 use error::*;
 
-declare_id!("F7cBo37zfFK5kLbTZxfejozgSiTb6J3EfgNWiu9HRPzD");
+declare_id!("51dLXLR41vAQV5gQBExTNdDL5CadqcTh2HFvjnHoNHUz");
 
 #[program]
 pub mod staking_program {
@@ -67,6 +68,34 @@ pub mod staking_program {
         role: String,
         model: u64,
     ) -> ProgramResult {
+        let mint_metadata = &mut &ctx.accounts.mint_metadata;
+
+        msg!("Metadata Account: {:?}", ctx.accounts.mint_metadata.key());
+        let (metadata, _) = Pubkey::find_program_address(
+            &[
+                metaplex_token_metadata::state::PREFIX.as_bytes(),
+                metaplex_token_metadata::id().as_ref(),
+                ctx.accounts.nft_mint.key().as_ref(),
+            ],
+            &metaplex_token_metadata::id(),
+        );
+        require!(metadata == mint_metadata.key(), StakingError::InvaliedMetadata);
+
+        // verify metadata is legit
+        let nft_metadata = Metadata::from_account_info(mint_metadata)?;
+
+        if let Some(creators) = nft_metadata.data.creators {
+            let mut valid: u8 = 0;
+            for creator in creators { 
+                if creator.address == CREATOR.parse::<Pubkey>().unwrap() && creator.verified == true {
+                    valid =1;
+                    break;
+                }
+            }
+        } else {
+            return Err(ProgramError::from(StakingError::MetadataCreatorParseError));
+        };
+
         let global_authority = &mut ctx.accounts.global_authority;
 
         let timestamp = Clock::get()?.unix_timestamp;
@@ -297,7 +326,17 @@ pub struct StakeNftToFixed<'info> {
     pub dest_nft_token_account: CpiAccount<'info, TokenAccount>,
 
     pub nft_mint: AccountInfo<'info>,
+    #[account(
+        mut,
+        constraint = mint_metadata.owner == &metaplex_token_metadata::ID
+    )]
+    pub mint_metadata: AccountInfo<'info>,
+
     pub token_program: Program<'info, Token>,
+
+    // the token metadata program
+    #[account(constraint = token_metadata_program.key == &metaplex_token_metadata::ID)]
+    pub token_metadata_program: AccountInfo<'info>,
 }
 
 #[derive(Accounts)]

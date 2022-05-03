@@ -20,4 +20,8 @@ pub enum StakingError {
     BeforeLockTime,
     #[msg("Insufficient Lamports")]
     LackLamports,
+    #[msg("Can't Parse The NFT's Creators")]
+    MetadataCreatorParseError,
+    #[msg("Invalid Metadata Address")]
+    InvaliedMetadata,
 }

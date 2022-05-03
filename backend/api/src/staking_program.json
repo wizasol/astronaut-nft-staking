@@ -16,6 +16,11 @@
           "isSigner": false
         },
         {
+          "name": "rewardVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
@@ -30,51 +35,6 @@
         {
           "name": "globalBump",
           "type": "u8"
-        }
-      ]
-    },
-    {
-      "name": "setAmount",
-      "accounts": [
-        {
-          "name": "admin",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "globalAuthority",
-          "isMut": true,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "globalBump",
-          "type": "u8"
-        },
-        {
-          "name": "advAmount",
-          "type": "u64"
-        },
-        {
-          "name": "sciAmount",
-          "type": "u64"
-        },
-        {
-          "name": "docAmount",
-          "type": "u64"
-        },
-        {
-          "name": "speAmount",
-          "type": "u64"
-        },
-        {
-          "name": "comAmount",
-          "type": "u64"
-        },
-        {
-          "name": "norAmount",
-          "type": "u64"
         }
       ]
     },
@@ -128,17 +88,7 @@
           "isSigner": false
         },
         {
-          "name": "mintMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
           "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMetadataProgram",
           "isMut": false,
           "isSigner": false
         }
@@ -149,15 +99,7 @@
           "type": "u8"
         },
         {
-          "name": "lockPeriod",
-          "type": "i64"
-        },
-        {
-          "name": "role",
-          "type": "string"
-        },
-        {
-          "name": "model",
+          "name": "rarity",
           "type": "u64"
         }
       ]
@@ -209,47 +151,6 @@
       ]
     },
     {
-      "name": "claimRewardAll",
-      "accounts": [
-        {
-          "name": "owner",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "userFixedPool",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "globalAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "rewardVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userRewardAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "globalBump",
-          "type": "u8"
-        }
-      ]
-    },
-    {
       "name": "claimReward",
       "accounts": [
         {
@@ -278,11 +179,6 @@
           "isSigner": false
         },
         {
-          "name": "nftMint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
@@ -303,35 +199,11 @@
         "kind": "struct",
         "fields": [
           {
-            "name": "admin",
-            "type": "publicKey"
-          },
-          {
-            "name": "totalAmount",
+            "name": "lotteryNftCount",
             "type": "u64"
           },
           {
-            "name": "adventureRate",
-            "type": "u64"
-          },
-          {
-            "name": "scientistRate",
-            "type": "u64"
-          },
-          {
-            "name": "doctorRate",
-            "type": "u64"
-          },
-          {
-            "name": "specialistRate",
-            "type": "u64"
-          },
-          {
-            "name": "commanderRate",
-            "type": "u64"
-          },
-          {
-            "name": "normalRate",
+            "name": "fixedNftCount",
             "type": "u64"
           }
         ]
@@ -375,6 +247,26 @@
   ],
   "types": [
     {
+      "name": "Item",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "publicKey"
+          },
+          {
+            "name": "nftAddr",
+            "type": "publicKey"
+          },
+          {
+            "name": "stakeTime",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
       "name": "StakedNFT",
       "type": {
         "kind": "struct",
@@ -388,19 +280,7 @@
             "type": "i64"
           },
           {
-            "name": "rewardTime",
-            "type": "i64"
-          },
-          {
-            "name": "lockTime",
-            "type": "i64"
-          },
-          {
-            "name": "rate",
-            "type": "i64"
-          },
-          {
-            "name": "model",
+            "name": "rank",
             "type": "u64"
           }
         ]
@@ -415,53 +295,33 @@
     },
     {
       "code": 6001,
-      "name": "InvalidAdmin",
-      "msg": "Invalid User Pool"
-    },
-    {
-      "code": 6002,
       "name": "InvalidPoolError",
       "msg": "Invalid pool number"
     },
     {
-      "code": 6003,
+      "code": 6002,
       "name": "InvalidNFTAddress",
       "msg": "No Matching NFT to withdraw"
     },
     {
-      "code": 6004,
+      "code": 6003,
       "name": "InvalidOwner",
       "msg": "NFT Owner key mismatch"
     },
     {
-      "code": 6005,
+      "code": 6004,
       "name": "InvalidWithdrawTime",
       "msg": "Staking Locked Now"
     },
     {
-      "code": 6006,
+      "code": 6005,
       "name": "IndexOverflow",
       "msg": "Withdraw NFT Index OverFlow"
     },
     {
-      "code": 6007,
-      "name": "BeforeLockTime",
-      "msg": "You can't Unstake Before LockTime"
-    },
-    {
-      "code": 6008,
+      "code": 6006,
       "name": "LackLamports",
       "msg": "Insufficient Lamports"
-    },
-    {
-      "code": 6009,
-      "name": "MetadataCreatorParseError",
-      "msg": "Can't Parse The NFT's Creators"
-    },
-    {
-      "code": 6010,
-      "name": "InvaliedMetadata",
-      "msg": "Invalid Metadata Address"
     }
   ]
 }

@@ -20,3 +20,4 @@ anchor-lang = "0.20.1"
 anchor-spl = "0.20.1"
 spl-token = "3.2.0"
 solana-program = "=1.9.5"
+metaplex-token-metadata = { version = "0.0.1", features = ["no-entrypoint"] }

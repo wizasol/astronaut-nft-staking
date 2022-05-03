@@ -1,5 +1,5 @@
 [programs.devnet]
-staking_program = "F7cBo37zfFK5kLbTZxfejozgSiTb6J3EfgNWiu9HRPzD"
+staking_program = "51dLXLR41vAQV5gQBExTNdDL5CadqcTh2HFvjnHoNHUz"
 
 [registry]
 url = "https://anchor.projectserum.com"
