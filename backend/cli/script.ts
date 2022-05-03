@@ -52,17 +52,17 @@ const main = async () => {
     console.log('RewardVault: ', rewardVault.toBase58());
     console.log(await solConnection.getTokenAccountBalance(rewardVault));
 
-    await initProject();
+    // await initProject();
 
     const globalPool: GlobalPool = await getGlobalState();
     // console.log("globalPool =", globalPool.totalAmount.toNumber());
 
     // await initUserPool(payer.publicKey);
 
-    // await stakeNft(payer.publicKey, new PublicKey('FLuGogNV1UPns65SCz8ZLBnPx1P9EtcjVphvbyg2t6ix'), 15, "Doctor", 1);
-    // await stakeNft(payer.publicKey, new PublicKey('FvVKssmkvAxTh1P9WLtoiCQExss4rpmt3ddqiap4eK3r'), false);
-    await withdrawNft(payer.publicKey, new PublicKey('FLuGogNV1UPns65SCz8ZLBnPx1P9EtcjVphvbyg2t6ix'));
-    // await withdrawNft(payer.publicKey, new PublicKey('LzRJvRA9zWcFDk8KwMPkVeZ3zbm6mw4sEdNmkChh9Sn'));
+    await stakeNft(payer.publicKey, new PublicKey('GF4XmpVKCf9aozU5igmr9sKNzDBkjvmiWujx8uC7Bnp4'), 15, "Doctor", 1);
+    // await stakeNft(payer.publicKey, new PublicKey('FLuGogNV1UPns65SCz8ZLBnPx1P9EtcjVphvbyg2t6ix'), false);
+    // await withdrawNft(payer.publicKey, new PublicKey('GF4XmpVKCf9aozU5igmr9sKNzDBkjvmiWujx8uC7Bnp4'));
+    // await withdrawNft(payer.publicKey, new PublicKey('FLuGogNV1UPns65SCz8ZLBnPx1P9EtcjVphvbyg2t6ix'));
     // await claimReward(payer.publicKey);
 
     // const userPool: UserPool = await getUserPoolState(payer.publicKey);
@@ -239,6 +239,7 @@ export const stakeNft = async (
     }
     );
     await solConnection.confirmTransaction(tx, "singleGossip");
+    console.log("txHash = ", tx);
 
 }
 

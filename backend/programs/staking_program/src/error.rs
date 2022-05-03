@@ -4,6 +4,8 @@ use anchor_lang::prelude::*;
 pub enum StakingError {
     #[msg("Invalid User Pool")]
     InvalidUserPool,
+    #[msg("Invalid Collection")]
+    InvalidCollection,
     #[msg("Invalid User Pool")]
     InvalidAdmin,
     #[msg("Invalid pool number")]

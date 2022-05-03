@@ -415,51 +415,56 @@
     },
     {
       "code": 6001,
+      "name": "InvalidCollection",
+      "msg": "Invalid Collection"
+    },
+    {
+      "code": 6002,
       "name": "InvalidAdmin",
       "msg": "Invalid User Pool"
     },
     {
-      "code": 6002,
+      "code": 6003,
       "name": "InvalidPoolError",
       "msg": "Invalid pool number"
     },
     {
-      "code": 6003,
+      "code": 6004,
       "name": "InvalidNFTAddress",
       "msg": "No Matching NFT to withdraw"
     },
     {
-      "code": 6004,
+      "code": 6005,
       "name": "InvalidOwner",
       "msg": "NFT Owner key mismatch"
     },
     {
-      "code": 6005,
+      "code": 6006,
       "name": "InvalidWithdrawTime",
       "msg": "Staking Locked Now"
     },
     {
-      "code": 6006,
+      "code": 6007,
       "name": "IndexOverflow",
       "msg": "Withdraw NFT Index OverFlow"
     },
     {
-      "code": 6007,
+      "code": 6008,
       "name": "BeforeLockTime",
       "msg": "You can't Unstake Before LockTime"
     },
     {
-      "code": 6008,
+      "code": 6009,
       "name": "LackLamports",
       "msg": "Insufficient Lamports"
     },
     {
-      "code": 6009,
+      "code": 6010,
       "name": "MetadataCreatorParseError",
       "msg": "Can't Parse The NFT's Creators"
     },
     {
-      "code": 6010,
+      "code": 6011,
       "name": "InvaliedMetadata",
       "msg": "Invalid Metadata Address"
     }

@@ -79,18 +79,25 @@ pub mod staking_program {
             ],
             &metaplex_token_metadata::id(),
         );
-        require!(metadata == mint_metadata.key(), StakingError::InvaliedMetadata);
+        require!(
+            metadata == mint_metadata.key(),
+            StakingError::InvaliedMetadata
+        );
 
         // verify metadata is legit
         let nft_metadata = Metadata::from_account_info(mint_metadata)?;
 
         if let Some(creators) = nft_metadata.data.creators {
             let mut valid: u8 = 0;
-            for creator in creators { 
-                if creator.address == CREATOR.parse::<Pubkey>().unwrap() && creator.verified == true {
-                    valid =1;
+            for creator in creators {
+                if creator.address == CREATOR.parse::<Pubkey>().unwrap() && creator.verified == true
+                {
+                    valid = 1;
                     break;
                 }
+            }
+            if valid != 1 {
+                return Err(ProgramError::from(StakingError::InvalidCollection));
             }
         } else {
             return Err(ProgramError::from(StakingError::MetadataCreatorParseError));
