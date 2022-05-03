@@ -136,17 +136,18 @@ impl UserPool {
             let index = i as usize;
             //require!(self.items[index].stake_time + LIMIT_PERIOD <= now, StakingError::InvalidWithdrawTime);
             let mut last_reward_time = self.reward_time;
-            if last_reward_time < self.items[index].stake_time {
-                last_reward_time = self.items[index].stake_time;
+            if last_reward_time < self.items[index].reward_time {
+                last_reward_time = self.items[index].reward_time;
             }
             let mut reward: u64 = 0;
             if self.items[index].model == 1 && now < self.items[index].lock_time {
-                reward =
-                    (self.items[index].rate * (now - last_reward_time) / DAY * 75 / 100) as u64;
+                reward = (self.items[index].rate * ((now - last_reward_time) / DAY) as i64 * 75
+                    / 100) as u64;
             } else {
-                reward = (self.items[index].rate * (now - last_reward_time) / DAY) as u64;
+                reward = (self.items[index].rate * ((now - last_reward_time) / DAY) as i64) as u64;
             }
             total_reward += reward;
+            self.items[index].reward_time = now;
         }
         total_reward += self.pending_reward;
         self.pending_reward = 0;
